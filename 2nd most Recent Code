@@ -1,0 +1,62 @@
+/*Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0.
+
+Assume the environment does not allow you to store 64-bit integers (signed or unsigned).
+
+I would want to come back to this solution to optimize since it is slow and uses lots of memory
+
+Runtime 6ms
+Beats 5.64%
+Memory 9.62 MB
+Beats 5.05%
+*/
+
+class Solution {
+public:
+    int reverse(int x) {
+    //main area I use to declare and initialize variables
+        stringstream num;
+        num << x;
+        string temp = num.str();
+        long reverse=0;
+        long count = 1;
+        bool neg=0;
+        //this is near the limit of usable bit sign so any more and it would overflow
+        if(x > 2147483647 || x < -2147483647){
+            reverse=0;
+        }
+        //if code is usable, then proceed
+        //reads the number in reverse order and skips the negative char
+        else{
+            for (char c : temp) {
+                if(c != '-' && (count < 10000000000 || neg==1)){
+                    //cout << ((c-48)*count) << endl;
+                    reverse = reverse +((c-48)*count);
+                    //cout << reverse << endl;
+                    if(count < 10000000000){
+                        count = count * 10;
+                    }
+                    else {
+                        reverse=0;
+                        break;
+                    }
+                }
+                //if the final char is the negative char then it will be used to later make the number equal to a negative version
+                else if(c == '-') {
+                    neg=1;
+                }
+                else{
+                //reverse = 0;
+                break; 
+                }
+            }
+            if(reverse > 2147483647){
+                reverse=0;
+            }
+            if(neg==1){
+                reverse= -reverse;
+            }
+        }
+        //cout << endl;
+        return reverse;
+    }
+};
